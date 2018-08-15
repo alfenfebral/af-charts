@@ -47,7 +47,7 @@ class App extends Component {
     return (
       <div>
         {title}
-        <LineChart data={data} />
+        <LineChart data={data} color="#000" />
       </div>
     );
   }

@@ -54,7 +54,7 @@ class LineChart extends Component {
 
   // BUILD SHADED AREA
   makeArea() {
-    const { data } = this.props;
+    const { data, areaStyle } = this.props;
     let pathD = `M ${this.getSvgX(data[0].x)} ${this.getSvgY(data[0].y)} `;
 
     pathD += data.map(point => `L ${this.getSvgX(point.x)} ${this.getSvgY(point.y)} `);
@@ -64,7 +64,7 @@ class LineChart extends Component {
     pathD += `L ${this.getSvgX(x.max)} ${this.getSvgY(y.min)} `
     + `L ${this.getSvgX(x.min)} ${this.getSvgY(y.min)} `;
 
-    return <path className="linechart_area" d={pathD} />;
+    return <path className="linechart_area" style={areaStyle} d={pathD} />;
   }
 
   // BUILD GRID AXIS
@@ -125,7 +125,7 @@ class LineChart extends Component {
     const adjustment = (svgLocation.width - svgWidth) / 2; // takes padding into consideration
     const relativeLoc = e.clientX - svgLocation.left - adjustment;
 
-    let svgData = [];
+    const svgData = [];
     data.map((point) => {
       svgData.push({
         svgX: this.getSvgX(point.x),
@@ -245,7 +245,19 @@ LineChart.defaultProps = {
   svgHeight: 300,
   svgWidth: 900,
   xLabelSize: 20,
-  yLabelSize: 80
+  yLabelSize: 80,
+  areaStyle: null
+};
+// Prop Types
+LineChart.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  color: PropTypes.string,
+  pointRadius: PropTypes.number,
+  svgHeight: PropTypes.number,
+  svgWidth: PropTypes.number,
+  xLabelSize: PropTypes.number,
+  yLabelSize: PropTypes.number,
+  areaStyle: PropTypes.object
 };
 
 export default LineChart;
