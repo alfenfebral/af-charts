@@ -1,0 +1,19 @@
+{
+  "plugins": [
+    "transform-export-extensions",
+    "transform-decorators-legacy",
+    "transform-class-properties",
+    "transform-object-rest-spread",
+    "transform-function-bind",
+    "lodash"
+  ],
+  "presets": [["env", { "modules": false }], "react"],
+  "env": {
+    "es6": {
+      "plugins": ["use-lodash-es"] 
+    },
+    "commonjs": {
+      "plugins": [["transform-es2015-modules-commonjs", { "loose": false }]]
+    }
+  }
+}
