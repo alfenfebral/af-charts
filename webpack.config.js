@@ -14,17 +14,23 @@ const config = {
   },
 
   module: {
-    loaders: [{
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      include: [
-        path.resolve(__dirname, 'src'),
-      ],
-      loader: 'babel-loader',
-      query: {
-        plugins: ['lodash'],
+    loaders: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        include: [
+          path.resolve(__dirname, 'src'),
+        ],
+        loader: 'babel-loader',
+        query: {
+          plugins: ['lodash'],
+        },
       },
-    }],
+      {
+        test: /\.css$/,
+        loader: ['style-loader', 'css-loader']
+      }
+    ],
   },
 
   devtool: 'source-map',

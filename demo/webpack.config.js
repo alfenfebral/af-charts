@@ -24,13 +24,19 @@ module.exports = {
     },
   },
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loaders: ['babel-loader'],
-      include: [
-        __dirname,
-        path.join(__dirname, '..', 'src'),
-      ],
-    }],
+    loaders: [
+      {
+        test: /\.js$/,
+        loaders: ['babel-loader'],
+        include: [
+          __dirname,
+          path.join(__dirname, '..', 'src'),
+        ],
+      },
+      {
+        test: /\.css$/,
+        loader: ['style-loader', 'css-loader']
+      }
+    ],
   },
 };

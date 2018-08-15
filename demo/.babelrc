@@ -6,5 +6,5 @@
     "transform-object-rest-spread",
     "transform-function-bind"
   ],
-  "presets": ["env", "react"]
+  "presets": ["es2015", "env", "react"]
 }
