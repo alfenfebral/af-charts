@@ -15,8 +15,8 @@ class LineChart extends Component {
   getX() {
     const { data } = this.props;
     return {
-      min: data[0].x,
-      max: data[data.length - 1].x
+      min: 0,
+      max: data.length - 1
     };
   }
 
@@ -43,9 +43,9 @@ class LineChart extends Component {
   // BUILD SVG PATH
   makePath() {
     const { data, color } = this.props;
-    let pathD = `M ${this.getSvgX(data[0].x)} ${this.getSvgY(data[0].y)} `;
+    let pathD = `M ${this.getSvgX(0)} ${this.getSvgY(data[0].y)} `;
 
-    pathD += data.map(point => `L ${this.getSvgX(point.x)} ${this.getSvgY(point.y)} `);
+    pathD += data.map((point, i) => `L ${this.getSvgX(i)} ${this.getSvgY(point.y)} `);
 
     return (
       <path className="linechart_path" d={pathD} style={{ stroke: color }} />
@@ -55,9 +55,9 @@ class LineChart extends Component {
   // BUILD SHADED AREA
   makeArea() {
     const { data, areaStyle } = this.props;
-    let pathD = `M ${this.getSvgX(data[0].x)} ${this.getSvgY(data[0].y)} `;
+    let pathD = `M ${this.getSvgX(0)} ${this.getSvgY(data[0].y)} `;
 
-    pathD += data.map(point => `L ${this.getSvgX(point.x)} ${this.getSvgY(point.y)} `);
+    pathD += data.map((point, i) => `L ${this.getSvgX(i)} ${this.getSvgY(point.y)} `);
 
     const x = this.getX();
     const y = this.getY();
@@ -126,9 +126,9 @@ class LineChart extends Component {
     const relativeLoc = e.clientX - svgLocation.left - adjustment;
 
     const svgData = [];
-    data.map((point) => {
+    data.map((point, i) => {
       svgData.push({
-        svgX: this.getSvgX(point.x),
+        svgX: this.getSvgX(i),
         svgY: this.getSvgY(point.y),
         d: point.d,
         p: point.p
