@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './LineChart.css';
 import PropTypes from 'prop-types';
+import Tooltip from './Tooltip';
 
 class LineChart extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class LineChart extends Component {
       hoverLoc: null,
       activePoint: null
     };
+    this.lineChartRef = React.createRef();
   }
 
   // GET X & Y || MAX & MIN
@@ -191,49 +193,86 @@ class LineChart extends Component {
     );
   }
 
+  makeTooltip() {
+    const { activePoint } = this.state;
+    const { svgHeight, svgWidth } = this.props;
+    const textPerGroup = 10;
+    const textGroupData = [];
+    const perLineSize = 25;
+    const rectPadding = 20;
+    let prevPos = { x: 30, y: 25 };
+
+    if (activePoint) {
+      const textGroupCount = Math.ceil((activePoint.p.length) / textPerGroup);
+
+      for (let i = 0; i < textGroupCount; i++) {
+        textGroupData.push({
+          x: prevPos.x,
+          y: prevPos.y + perLineSize,
+          value: activePoint.p.substring(i * textPerGroup, (i + 1) * textPerGroup)
+        });
+        prevPos = { x: prevPos.x, y: prevPos.y + perLineSize };
+      }
+
+      const textGroup = textGroupData.map((item, i) => (
+        <text key={i} x={item.x} y={item.y} fontSize={18} fill="white">
+          {item.value}
+        </text>
+      ));
+
+      return (
+        <Tooltip
+          for={this.lineChartRef}
+          parentHeight={svgHeight}
+          parentWidth={svgWidth}
+          rectWidth={120 + rectPadding}
+          rectHeight={35 + (textGroupData.length * perLineSize) + 2}
+          activePoint={activePoint}
+          padding={rectPadding}
+        >
+          <rect
+            x={rectPadding}
+            y={2}
+            width={120}
+            height={35 + (textGroupData.length * perLineSize)}
+            rx={4}
+            ry={4}
+            fill="#2196F3"
+            style={{ strokeWidth: 0.5, stroke: '#2196F3' }}
+          />
+          <text x={30} y={25} fontSize={18} fill="white" width={90} style={{ fontWeight: 'bold' }}>
+            {activePoint.d}
+          </text>
+          {textGroup}
+        </Tooltip>
+      );
+    }
+    return null;
+  }
+
   render() {
-    const { hoverLoc, activePoint } = this.state;
+    const { hoverLoc } = this.state;
     const { svgHeight, svgWidth } = this.props;
 
-    const svgLocation = hoverLoc ? document.getElementsByClassName('linechart')[0].getBoundingClientRect() : 0;
-
-    const placementStyles = {};
-    const width = 100;
-    placementStyles.width = `${width}px`;
-    placementStyles.left = hoverLoc + svgLocation.left - (width / 2);
-
     return (
-      <div className="container">
-        <div className="row">
-          <div className="popup">
-            {hoverLoc ? (
-              <div className="hover" style={placementStyles}>
-                <div className="date">{activePoint.d}</div>
-                <div className="price">{activePoint.p}</div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-        <div className="row">
-          <svg
-            width={svgWidth}
-            height={svgHeight}
-            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-            className="linechart"
-            onMouseLeave={() => this.stopHover()}
-            onMouseMove={e => this.getCoords(e)}
-          >
-            <g>
-              {this.makeAxis()}
-              {this.makePath()}
-              {this.makeArea()}
-              {this.makeLabels()}
-              {hoverLoc ? this.createLine() : null}
-              {hoverLoc ? this.makeActivePoint() : null}
-            </g>
-          </svg>
-        </div>
-      </div>
+      <svg
+        width={svgWidth}
+        height={svgHeight}
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        className="linechart"
+        onMouseLeave={() => this.stopHover()}
+        onMouseMove={e => this.getCoords(e)}
+      >
+        <g ref={this.lineChartRef}>
+          {this.makeAxis()}
+          {this.makePath()}
+          {this.makeArea()}
+          {this.makeLabels()}
+          {hoverLoc ? this.createLine() : null}
+          {hoverLoc ? this.makeActivePoint() : null}
+        </g>
+        {this.makeTooltip()}
+      </svg>
     );
   }
 }

@@ -1,6 +1,10 @@
 ## AF Charts
 
-## Patch 0.0.7
+### Patch
+0.0.8  
+Tooltip bow SVG based
+
+0.0.7  
 Remove x in data
 
 ### Usage
